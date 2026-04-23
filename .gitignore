@@ -1,3 +1,7 @@
 
 /backend/.idea
 /backend/.idea
+/backend/src/__pycache__
+*.pyc
+*.pyc
+/backend/src/__pycache__

@@ -1,63 +1,49 @@
-from datetime import datetime, timedelta, timezone
+from slowapi.errors import RateLimitExceeded
+from slowapi import _rate_limit_exceeded_handler
 
-import jwt
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from fastapi import FastAPI
 
-app = FastAPI()
+from src.api.v1.router import api_router
+from src.core.config import settings
+from src.core.events import lifespan
+from src.middleware.cors import add_cors_middleware
+from src.middleware.logging import RequestLoggingMiddleware
+from src.middleware.rate_limit import limiter
 
-# Constants
-SECRET_KEY = "your_secret_key"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Adjust this to your needs
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+app = FastAPI(
+    title=settings.APP_NAME,
+    version=settings.APP_VERSION,
+    description=settings.APP_DESCRIPTION,
+    lifespan=lifespan,
+    docs_url="/docs",
+    redoc_url="/redoc",
+    openapi_url="/openapi.json",
 )
 
-# Dummy user data for demonstration purposes
-fake_users_db = {
-    "user1": {
-        "username": "user1",
-        "password": "password123",
+# Rate limiter state
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+# Middleware (order matters – outermost is applied last)
+add_cors_middleware(app)
+app.add_middleware(RequestLoggingMiddleware)
+
+# Routers
+app.include_router(api_router, prefix="/api/v1")
+
+
+@app.get("/", tags=["Root"])
+def root() -> dict:
+    return {
+        "message": f"Welcome to {settings.APP_NAME} v{settings.APP_VERSION}",
+        "docs": "/docs",
+        "health": "/api/v1/health/",
     }
-}
 
 
-class LoginForm(BaseModel):
-    username: str
-    password: str
-
-
-def verify_password(plain_password, hashed_password):
-    # In a real application, use a proper password hashing library like bcrypt
-    return plain_password == hashed_password
-
-
-def get_user(username: str):
-    if username in fake_users_db:
-        user_dict = fake_users_db[username]
-        return user_dict
-    return None
-
-
-@app.post("/login")
-async def login_for_access_token(form_data: LoginForm):
-    user = get_user(form_data.username)
-    if not user or not verify_password(form_data.password, user["password"]):
-        raise HTTPException(status_code=401, detail="Invalid credentials")
-
-    payload = {
-        "sub": form_data.username,
-        "exp": datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    }
-    access_token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
-    return {"access_token": access_token, "token_type": "bearer"}
+# Placeholder – superseded by /api/v1/auth/login
+async def login_for_access_token() -> None:
+    pass
 
 
 if __name__ == "__main__":

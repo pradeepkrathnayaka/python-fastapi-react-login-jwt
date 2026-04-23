@@ -1,6 +1,24 @@
-fastapi==0.112.2
-uvicorn[standard]==0.30.6
-PyJWT==2.9.0
-pytest==8.3.2
-pytest-mock==3.14.0
+# Core Framework
+fastapi[standard]>=0.115.0
+uvicorn[standard]>=0.30.0
 
+# Data Validation
+pydantic>=2.8.0
+pydantic-settings>=2.3.0
+email-validator>=2.2.0
+
+# Security
+PyJWT>=2.9.0
+bcrypt>=4.2.0
+python-multipart>=0.0.12
+
+# Database
+sqlalchemy>=2.0.31
+alembic>=1.13.0
+# psycopg2-binary>=2.9.9  # Uncomment for PostgreSQL in production
+
+# Rate Limiting
+slowapi>=0.1.9
+
+# Utilities
+python-dotenv>=1.0.0

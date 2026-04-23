@@ -1,0 +1,65 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: var(--header-height, 4rem);
+  background-color: var(--color-white, #fff);
+  border-bottom: 1px solid var(--color-gray-200, #e5e7eb);
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+
+.container {
+  max-width: var(--max-content-width, 80rem);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-primary, #3b82f6);
+  text-decoration: none;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav a {
+  font-size: 0.875rem;
+  color: var(--color-gray-600, #4b5563);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 150ms ease-in-out;
+}
+
+.nav a:hover {
+  color: var(--color-primary, #3b82f6);
+}
+
+.username {
+  font-size: 0.875rem;
+  color: var(--color-gray-700, #374151);
+  font-weight: 500;
+}
+
+.logoutBtn {
+  font-size: 0.875rem;
+  color: var(--color-danger, #ef4444);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  padding: 0;
+  transition: color 150ms ease-in-out;
+}
+
+.logoutBtn:hover {
+  color: var(--color-danger-hover, #dc2626);
+}

@@ -1,0 +1,18 @@
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.body {
+  display: flex;
+  flex: 1;
+}
+
+.main {
+  flex: 1;
+  padding: 2rem 1.5rem;
+  max-width: var(--max-content-width, 80rem);
+  width: 100%;
+  margin: 0 auto;
+}

@@ -1,0 +1,15 @@
+# Include production dependencies
+-r requirements.txt
+
+# Testing
+pytest
+pytest-cov
+pytest-asyncio
+pytest-mock
+anyio
+
+# Code Quality
+black
+flake8
+mypy
+isort
